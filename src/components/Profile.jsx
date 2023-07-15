@@ -48,7 +48,7 @@ const Profile = () =>{
     <h2><img className="avatar-small" src={userAvatar} alt="user avatar" /> {username}
     </h2>
    { user && <ul>
-        <li><b>email:</b> {user.email}.com</li>
+        <li><b>email:</b> {user.email}</li>
     </ul>}
     <div className="profile-nav nav nav-tabs pt-2 mb-4">
         <a href="/" className="profile-nav-link nav-item nav-link active">Posts</a>
