@@ -10,6 +10,7 @@ import NewPost from './pages/NewPost';
 import EditPost from './pages/EditPost';
 import Search from './pages/Search';
 import LoadingPage from './pages/LoadingPage';
+import Welcome from './pages/Welcome';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
      <Route path="newpost" element={<NewPost/>}  />  
      <Route path="post/*" element={<EditPost />}  />  
      <Route path="loading" element={<LoadingPage />} />
+     <Route path="/welc" element={<Welcome />} />
      <Route path="profile/*" element={<ProfilePage />} />
      <Route path="search" element={<Search />} />
      <Route path="*" element={<NoPage />} />         

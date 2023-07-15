@@ -4,14 +4,16 @@ import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../App.css'
 import { BASE_URL } from "../services/helper";
+import Loading from "./Loading";
 
 const CreatePost = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [postAlert, setPostAlert] = useState("");
 
   const handleSubmit = (event) => {
+    setPostAlert("load");
     event.preventDefault();
-
     const newPost = {
       username: localStorage.getItem("currentUser"),
       title: title,
@@ -25,14 +27,22 @@ const CreatePost = () => {
         // Clear the input fields
         setTitle("");
         setContent("");
+        setPostAlert("post created!");
       })
       .catch(error => {
         console.error("Error publishing post:", error);
       });
   };
-
+  if(postAlert==="load"){
+    return <Loading />
+  }
   return (
     <div className="container py-md-5 container--narrow">
+      {postAlert && (
+        <div className="container mt-3">
+          <div className="alert alert-success">{postAlert}</div>
+        </div>
+      )}
       <form onSubmit={handleSubmit}>
         <div className="form-group">
           <label htmlFor="post-title" className="text-muted mb-1">

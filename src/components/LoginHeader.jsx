@@ -13,21 +13,21 @@ const LoginHeader = () => {
   const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     const user = {
       username: username,
       password: password,
     };
-
+    
     axios.post(BASE_URL + "/users/login", user)
       .then(response => {
+        navigate('/loading');
         console.log(response.data); // Token or authentication status from the server
         setUsername("");
         setPassword("");
         setLoginError("");
         localStorage.setItem("currentUser", user.username);
         navigate("/");
-        
       })
       .catch(error => {
         console.error("Error logging in:", error);

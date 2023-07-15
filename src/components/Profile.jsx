@@ -5,28 +5,51 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import userAvatar from "../userAvatar.png";
 import { BASE_URL } from "../services/helper";
-
+import Loading from "./Loading";
 
 const Profile = () =>{
+    const username = Object.values(useParams())[0];
+    const [user,setUser] = useState(null);
+  
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+              const response = await axios.get(`${BASE_URL}/users/profile/${username}`);
+              setUser(response.data[0]);
+              
+            } catch (error) {
+              console.error("Error fetching User:", error);
+            }
+          };  
+        fetchUser();
+    },[username]);
+    
     const navigate = useNavigate();
-    const user = {username: Object.values(useParams())[0]};
-    if(user.username.length<3){
+    if(user && user.length===0){
         navigate('/404');
     }
-    const [posts, setPosts] = useState([]);
+
+    const [posts, setPosts] = useState(null);
     useEffect(() => {
-        axios.get(`${BASE_URL}/posts/profile/${user.username}?sort=-createdAt`)
+        axios.get(`${BASE_URL}/posts/profile/${username}?sort=-createdAt`)
             .then(response => {
                 setPosts(response.data); 
             })
             .catch(error => {
                 console.error("Error fetching posts:", error);
             });
-    }, [user.username]);
+    }, [username]);
+
+    if(!posts){
+        return <Loading />
+    }
 
     return     <div className="container py-md-5 container--narrow">
-    <h2><img className="avatar-small" src={userAvatar} alt="user avatar" /> {user.username}
+    <h2><img className="avatar-small" src={userAvatar} alt="user avatar" /> {username}
     </h2>
+   { user && <ul>
+        <li><b>email:</b> {user.email}.com</li>
+    </ul>}
     <div className="profile-nav nav nav-tabs pt-2 mb-4">
         <a href="/" className="profile-nav-link nav-item nav-link active">Posts</a>
     </div>

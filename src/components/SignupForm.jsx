@@ -11,8 +11,21 @@ const SignupForm = () => {
   const [password, setPassword] = useState("");
   const [signupError, setSignupError] = useState("");
   const navigate = useNavigate();
+
+  const validateUsername = (value) => {
+    // Check if the username contains spaces or symbols except underscores
+    const regex = /^[a-zA-Z0-9_]+$/;
+    return regex.test(value);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Validate the username
+    if (!validateUsername(username)) {
+      setSignupError("Invalid username. Usernames can only contain letters, numbers, and underscores.");
+      return;
+    }
 
     const newUser = {
       username: username,
@@ -20,26 +33,27 @@ const SignupForm = () => {
       password: password,
     };
 
-    axios.post( BASE_URL + "/users/add", newUser)
+    axios.post(BASE_URL + "/users/add", newUser)
       .then(response => {
+        navigate('/loading');
         console.log(response.data); // Confirmation message from the server
         setUsername("");
         setEmail("");
         setPassword("");
         localStorage.setItem("currentUser", newUser.username);
-        navigate("/");
+        navigate("/welc");
       })
       .catch(error => {
         console.error("Error creating user:", error);
-        setSignupError("username or email already exists");
+        setSignupError("Username or email already exists.");
       });
   };
 
   return (
     <div className="col-lg-5 pl-lg-5 mb-3 py-lg-5">
-        {signupError && (
+      {signupError && (
         <div className="container mt-3">
-          <div className="alert alert-primary">{signupError}</div>
+          <div className="alert alert-warning">{signupError}</div>
         </div>
       )}
       <form onSubmit={handleSubmit}>
@@ -86,6 +100,7 @@ const SignupForm = () => {
       </form>
     </div>
   );
-}
+};
 
 export default SignupForm;
+

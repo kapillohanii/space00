@@ -6,7 +6,7 @@ import userAvatar from "../userAvatar.png";
 import { BASE_URL } from "../services/helper";
 import Loading from "./Loading";
 
-const UserFeedBody = () => {
+const WelcomeBody = () => {
     const [posts, setPosts] = useState(null);
     useEffect(() => {
       const fetchPosts = async () => {
@@ -26,15 +26,18 @@ const UserFeedBody = () => {
     if (!posts) {
       return <Loading />;
     }
-  
     else if(posts.length===0){
         return <div className="container py-md-5 container--narrow">
             <h2 className="text-center mb-4">No Feed ;-;</h2>
         </div>
     }
     return (
+
         <div className="container py-md-5 container--narrow">
-            <h2 className="text-center mb-4">!New Feed!</h2>
+            <div className="container mt-3">
+                <div className="alert alert-primary">Welcome Aboard! {localStorage.getItem("currentUser")}</div>
+            </div>
+            <h2 className="text-center mb-4">!SpAcE!</h2>
             <div className="list-group">
                 {posts.map(post => (
                     <a href={"/post/" + post._id} className="list-group-item list-group-item-action" key={post._id} suppressContentEditableWarning>
@@ -49,4 +52,4 @@ const UserFeedBody = () => {
     );
 }
 
-export default UserFeedBody;
+export default WelcomeBody;
