@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,9 +9,11 @@ const SignupForm = () => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [signupError, setSignupError] = useState("");
   const navigate = useNavigate();
-
+  useEffect(() => {
+    // Remove the "loginError" item from localStorage on component mount (normal reload)
+    localStorage.removeItem("signupError");
+  }, []);
   const validateUsername = (value) => {
     // Check if the username contains spaces or symbols except underscores
     const regex = /^[a-z0-9_]+$/;
@@ -20,10 +22,10 @@ const SignupForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     // Validate the username
     if (!validateUsername(username)) {
-      setSignupError("Invalid username. Usernames can only contain lowercase letters, numbers, and underscores.");
+      navigate('/login');
+      localStorage.setItem("signupError","Invalid username. Usernames can only contain lowercase letters, numbers, and underscores.");
       return;
     }
 
@@ -32,7 +34,7 @@ const SignupForm = () => {
       email: email,
       password: password,
     };
-
+    navigate("/loading");
     axios.post(BASE_URL + "/users/add", newUser)
       .then(response => {
         navigate('/loading');
@@ -41,19 +43,21 @@ const SignupForm = () => {
         setEmail("");
         setPassword("");
         localStorage.setItem("currentUser", newUser.username);
+        localStorage.removeItem("signupError");
         navigate("/welc");
       })
       .catch(error => {
         console.error("Error creating user:", error);
-        setSignupError("Username or email already exists.");
+        navigate('/login');
+        localStorage.setItem("signupError","Username or email already exists.");
       });
   };
 
   return (
     <div className="col-lg-5 pl-lg-5 mb-3 py-lg-5">
-      {signupError && (
+      {localStorage.getItem("signupError") && (
         <div className="container mt-3">
-          <div className="alert alert-warning">{signupError}</div>
+          <div className="alert alert-warning">{localStorage.getItem("signupError")}</div>
         </div>
       )}
       <form onSubmit={handleSubmit}>

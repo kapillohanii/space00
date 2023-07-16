@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -9,30 +9,33 @@ import {BASE_URL} from "../services/helper";
 const LoginHeader = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loginError, setLoginError] = useState("");
   const navigate = useNavigate();
+
+  useEffect(() => {
+    localStorage.removeItem("loginError");
+  }, []);
   const handleSubmit = (e) => {
     e.preventDefault();
-  
     const user = {
       username: username,
       password: password,
     };
-    
+    navigate('/loading');
     axios.post(BASE_URL + "/users/login", user)
       .then(response => {
-        navigate('/loading');
-        console.log(response.data); // Token or authentication status from the server
+        console.log(response.data);
+        // Token or authentication status from the server
         setUsername("");
         setPassword("");
-        setLoginError("");
         localStorage.setItem("currentUser", user.username);
+        localStorage.removeItem("loginError");
         navigate("/");
       })
       .catch(error => {
         console.error("Error logging in:", error);
-        setLoginError("Invalid username or password");
-      });
+        navigate('/login');
+        localStorage.setItem("loginError","Invalid username or password");
+      }); 
   };
 
   return (
@@ -74,9 +77,9 @@ const LoginHeader = () => {
           </form>
         </div>
       </header>
-      {loginError && (
+      {localStorage.getItem("loginError") && (
         <div className="container mt-3">
-          <div className="alert alert-danger">{loginError}</div>
+          <div className="alert alert-danger">{localStorage.getItem("loginError")}</div>
         </div>
       )}
     </div>
