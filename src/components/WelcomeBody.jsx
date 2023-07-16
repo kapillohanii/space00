@@ -22,7 +22,19 @@ const WelcomeBody = () => {
   
       fetchPosts();
     });
-  
+    const trimContent = (post) => {
+      const words = post.content.split(" ");
+      if (words.length > 30) {
+          const trimmedContent = words.slice(0, 30).join(" ");
+          return (
+              <>
+                {trimmedContent}
+                <a href={"/post/" + post._id} className="text-muted small" style={{textDecoration:"none"}}>...full post</a>
+              </>
+          );
+      }
+      return post.content;
+    };
     if (!posts) {
       return <Loading />;
     }
@@ -43,7 +55,7 @@ const WelcomeBody = () => {
                     <a href={"/post/" + post._id} className="list-group-item list-group-item-action" key={post._id} suppressContentEditableWarning>
                         <img className="avatar-tiny" src={userAvatar} alt="user avatar"/>
                         <i><strong> {post.title}</strong></i>
-                        <p>{post.content}</p>
+                        <p>{trimContent(post)}</p>
                         <span className="text-muted small" >by <a href={"/profile/" + post.username}>{post.username}</a>  on {post.date}</span>
                     </a>
                 ))}
