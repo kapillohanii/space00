@@ -14,7 +14,7 @@ const SignupForm = () => {
 
   const validateUsername = (value) => {
     // Check if the username contains spaces or symbols except underscores
-    const regex = /^[a-zA-Z0-9_]+$/;
+    const regex = /^[a-z0-9_]+$/;
     return regex.test(value);
   };
 
@@ -23,7 +23,7 @@ const SignupForm = () => {
 
     // Validate the username
     if (!validateUsername(username)) {
-      setSignupError("Invalid username. Usernames can only contain letters, numbers, and underscores.");
+      setSignupError("Invalid username. Usernames can only contain lowercase letters, numbers, and underscores.");
       return;
     }
 
