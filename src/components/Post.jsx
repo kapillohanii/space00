@@ -8,7 +8,7 @@ import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import userAvatar from "../userAvatar.png";
 import Loading from "./Loading";
 import { BASE_URL } from "../services/helper";
-
+import Sentiment from  "./Sentiment";
 const Post = () => {
   const postId = Object.values(useParams())[0];
   const [post, setPost] = useState(null);
@@ -26,6 +26,7 @@ const Post = () => {
       console.error("Error fetching post:", error);
     }
   };
+
 
   const handleDelete = async () => {
     navigate('/loading');
@@ -46,7 +47,7 @@ const Post = () => {
     return (
     <div className="container py-md-5 container--narrow">
       <div className="d-flex justify-content-between">
-        <h2>{post.title}</h2>
+        <h2><Sentiment colorCode={post.sentiment} /> {post.title}</h2>
          <span className="pt-2">
           {/* <a
             href="/"
@@ -72,7 +73,7 @@ const Post = () => {
       </div>
 
       <p className="text-muted small mb-4">
-        <a href="/">
+        <a href={"/profile/" + post.username}>
           <img
             className="avatar-tiny"
             src={userAvatar}
@@ -92,10 +93,10 @@ const Post = () => {
   }
   return     <div className="container py-md-5 container--narrow">
   <div className="d-flex justify-content-between">
-    <h2>{post.title}</h2>
+    <h2><Sentiment colorCode={post.sentiment} /> {post.title}</h2>
   </div>
   <p className="text-muted small mb-4">
-    <a href="/">
+    <a href={"/profile/" + post.username}>
       <img
         className="avatar-tiny"
         src={userAvatar}
