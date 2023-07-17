@@ -21,6 +21,7 @@ def sentiment():
     return "content-sentiment.py"
 
 # Define an API endpoint
+#lets see
 @app.route('/sentiment-color', methods=['POST'])
 def color():
     # Get the input data from the request
